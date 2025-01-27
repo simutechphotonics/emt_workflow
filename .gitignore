@@ -9,4 +9,4 @@
 /3_FDTD_EMT_bandstructure
 /4_EME_optimize
 /5_full_simulation
-_pycache_
+__pycache__/
