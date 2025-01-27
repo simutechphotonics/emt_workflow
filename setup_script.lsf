@@ -1,0 +1,12 @@
+#This file is inserted into the model's "Setup Script" section
+#It allows the model to automatically update object properties
+setnamed("FDTD","x span", pitch);
+setnamed("FDTD","bloch units","SI");
+setnamed("FDTD","kx",kx*2*pi/pitch);
+
+name="bandstructure";
+setnamed(name,"x span",pitch);
+setnamed(name,"f1",f1);
+setnamed(name,"f2",f2);
+setnamed(name,"apod_center",apod_center);
+setnamed(name,"apod_width",apod_width);

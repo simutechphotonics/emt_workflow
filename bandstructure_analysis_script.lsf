@@ -1,0 +1,45 @@
+#The script here is to be added to the Bandstructure analysis group
+#This is an edited version of the Lumerical bandstructure script.
+#From: Analysis>More Choices>Bandstructure
+
+# simplify variable names by removing spaces
+apod_width = %apod_width%;
+apod_center = %apod_center%;
+n_monitors = %n monitors%;
+
+# don't allow f1=0, as this causes a minor problem:  f=0 corresponds to lambda=infinity, and the infinity causes problems in the data visualizer.
+if (f1<=0) { f1 = f2/10000; }
+
+t = getdata("m1","t");
+fs = 0;
+
+# loop over each time monitor
+for(j=1:n_monitors) {
+  for (component_i=1:3) { # loop over field components
+    if (component_i==1) { component="Ex"; }
+    if (component_i==2) { component="Ey"; }
+    if (component_i==3) { component="Ez"; }
+
+    # collect the field data
+    signal = pinch(getdata("m"+num2str(j),component));
+
+    # apodize the signal with a gaussian, to ignore start and end effects
+    signal = signal * exp( - 0.5*(t-max(t)*apod_center)^2/(apod_width*max(t))^2);
+
+    # fft the time signal and add it to the other fft's
+    f = linspace(f1,f2,5000);
+    fs = fs + abs(czt(signal,t,2*pi*f))^2;
+  }
+}
+
+# create data set
+spectrum = matrixdataset("spectrum");
+# in most cases, lambda is before f in datasets.  However, for this particular application, frequency is far more common, so it is first.
+spectrum.addparameter("f",f,"lambda",c/f);
+spectrum.addattribute("fs",fs);
+
+peaks = findpeaks(fs,2);
+lambda1 = c/f(peaks(1));
+lambda2 = c/f(peaks(2));
+lambda_center = (lambda1+lambda2)/2;
+delta_lambda = abs(lambda2-lambda1);

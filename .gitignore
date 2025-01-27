@@ -1,0 +1,12 @@
+*.fsp
+*.log
+*.lms
+/1_waveguide_analysis
+/1a_FDE_strip_wg
+/1b_EMT_swg
+/1c_FDTD_swg
+/2_supermode_analysis
+/3_FDTD_EMT_bandstructure
+/4_EME_optimize
+/5_full_simulation
+_pycache_
